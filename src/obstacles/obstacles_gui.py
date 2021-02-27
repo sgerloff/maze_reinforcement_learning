@@ -3,6 +3,8 @@ from tkinter import ttk
 import numpy as np
 from src.obstacles.obstacle_template import ObstacleTemplate
 
+import traceback
+
 class ObstaclesGUI(ObstacleTemplate):
     def __init__(self, shape=(7,7), goal_state=None, start_state=None):
         super().__init__(shape,goal_state, start_state)
@@ -34,7 +36,6 @@ class ObstaclesGUI(ObstacleTemplate):
                     checkb.grid(row=i, column=j)
 
     def get_obstacles(self):
-        self.root.tk.call('tk', 'scaling', 10.)
         self.root.mainloop()
         return self.states
 
