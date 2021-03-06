@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 from matplotlib import interactive
 
-from src.utility.plot import setup_plot, plot_values_and_policy, plot_simulation
-from src.environment.maze import Maze
+from src.plot import setup_plot, plot_values_and_policy, plot_simulation
+from src.maze import Maze
 
 import numpy as np
 
@@ -27,10 +27,10 @@ class GreedyQLearner:
         self.reset()
 
     def reset(self):
-        self.policy = self.__get_random_policy(epsilon=10)
+        self.policy = self.get_random_policy(epsilon=10)
         self.quality = np.zeros(self.policy.shape)
 
-    def __get_random_policy(self, epsilon=0.1):
+    def get_random_policy(self, epsilon=0.1):
         random_policy = np.zeros((self.env.shape[0], self.env.shape[1], self.env.action_space.n))
         # Set random actions to 1
         for i in range(random_policy.shape[0]):
@@ -44,12 +44,15 @@ class GreedyQLearner:
         return random_policy / normalization_factor
 
     def episode(self, learning_episode_id=0):
-        terminated, epsilon = self.__initialize_episode(learning_episode_id)
-
+        terminated, epsilon = self.initialize_episode(learning_episode_id)
+        states, action_ids = [], []
         while not terminated:
-            terminated = self.__run_episode(epsilon)
+            states.append(copy.deepcopy(self.env.state))
+            terminated, action_id = self.run_episode(epsilon)
+            action_ids.append(action_id)
+        return states, action_ids
 
-    def __initialize_episode(self, learning_episode_id):
+    def initialize_episode(self, learning_episode_id):
         terminated = False
         self.env.reset()
         if np.array_equal(self.env.state, self.env.goal_state):
@@ -59,18 +62,18 @@ class GreedyQLearner:
 
         return terminated, epsilon
 
-    def __run_episode(self, epsilon):
+    def run_episode(self, epsilon):
         state = copy.deepcopy(self.env.state)
 
-        self.policy = self.__get_policy(epsilon)
+        self.policy = self.get_policy(epsilon)
         action_id = self.choose_action(self.env.state)
 
         state_prime, reward, terminated, info = self.env.step(action_id)
         self.learn_quality(state, action_id, reward, state_prime, self.quality, self.gamma, self.alpha)
 
-        return terminated
+        return terminated, action_id
 
-    def __get_policy(self, epsilon):
+    def get_policy(self, epsilon):
         policy = np.full(self.quality.shape, epsilon / self.env.action_space.n)
         for state in self.env.get_all_states():
             i, j = state
@@ -98,21 +101,21 @@ class GreedyQLearner:
 
         return quality
 
-    def learn(self, number_of_episodes=100):
-        self.__initialize_plots()
+    def learn(self, number_of_episodes=100, simulation_interval=50):
+        self.initialize_plots()
         for learning_episode_id in tqdm.tqdm(range(number_of_episodes), 'learning episode'):
             self.episode(learning_episode_id)
-            self.__plot_episode(learning_episode_id, simulation_interval=50)
+            self.plot_episode(learning_episode_id, simulation_interval=simulation_interval)
 
 
-    def __initialize_plots(self):
+    def initialize_plots(self):
         self.ax = setup_plot(self.env.shape)
         plt.ion()
         interactive(True)
         plt.cla()
         self.ax.axis('off')
 
-    def __plot_episode(self, learning_episode_id, simulation_interval=50):
+    def plot_episode(self, learning_episode_id, simulation_interval=50):
         plot_values_and_policy(self)
         if (learning_episode_id % simulation_interval == simulation_interval - 1):
             if learning_episode_id > 2.*simulation_interval - 1: # Skip the first two intervals
