@@ -7,10 +7,10 @@ import random
 
 
 class PrimMaze(ObstacleTemplate):
-    def __init__(self, shape=(8, 8), start_state=None, goal_state=None):
-        super().__init__(shape, goal_state, start_state)
-        self.obstacles = np.ones(shape)
-        self.maze = np.zeros(shape)
+    def __init__(self, xdim=7, ydim=7, start_state=None, goal_state=None):
+        super().__init__(xdim, ydim, goal_state, start_state)
+        self.obstacles = np.ones(self.shape)
+        self.maze = np.zeros(self.shape)
         self.geometry_directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
         self.walls = []

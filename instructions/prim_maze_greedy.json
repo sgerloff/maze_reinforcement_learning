@@ -1,0 +1,19 @@
+{
+  "obstacles": {
+    "class": "src.obstacles.prim_maze_obstacles.PrimMaze",
+    "kwargs": {
+      "xdim": 13,
+      "ydim": 13
+    }
+  },
+  "learner": {
+    "class": "src.learner.greedy_q_learner.GreedyQLearner",
+    "kwargs": {
+      "epsilon": 1.0
+    }
+  },
+  "learner__learn_kwargs": {
+    "number_of_episodes": 2000,
+    "simulation_interval": 50
+  }
+}

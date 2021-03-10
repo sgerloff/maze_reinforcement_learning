@@ -1,0 +1,19 @@
+{
+  "obstacles": {
+    "class": "src.obstacles.prim_maze_obstacles.PrimMaze",
+    "kwargs": {
+      "xdim": 13,
+      "ydim": 13
+    }
+  },
+  "learner": {
+    "class": "src.learner.softmax_q_learner.SoftmaxQLearner",
+    "kwargs": {
+      "temperature": 0.6
+    }
+  },
+  "learner__learn_kwargs": {
+    "number_of_episodes": 2000,
+    "simulation_interval": 50
+  }
+}

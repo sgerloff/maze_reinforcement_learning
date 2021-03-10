@@ -1,7 +1,7 @@
 
 class ObstacleTemplate:
-    def __init__(self, shape=(7,7), goal_state=None, start_state=None):
-        self.shape = shape
+    def __init__(self, xdim=7, ydim=7, goal_state=None, start_state=None):
+        self.shape = (xdim, ydim)
         self.set_start_state(start_state)
         self.set_goal_state(goal_state)
 

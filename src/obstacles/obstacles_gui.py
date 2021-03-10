@@ -6,8 +6,8 @@ from src.obstacles.obstacle_template import ObstacleTemplate
 import traceback
 
 class ObstaclesGUI(ObstacleTemplate):
-    def __init__(self, shape=(7,7), goal_state=None, start_state=None):
-        super().__init__(shape,goal_state, start_state)
+    def __init__(self, xdim=7, ydim=7, goal_state=None, start_state=None):
+        super().__init__(xdim, ydim, goal_state, start_state)
 
         self.check_boxes = []
         self.states = ""

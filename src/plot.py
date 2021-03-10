@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import copy, os
 
+from src.utility import get_project_dir
+
 # Set custom color map, indicating obstacles and goal with "under" and "over" color, respectively.
 value_colormap = copy.copy(plt.cm.get_cmap("viridis"))
 value_colormap.set_under("#162838")  # Fancy dark grey
@@ -24,7 +26,7 @@ def plot_values_and_policy(learner, episode_id, record=False):
     value, vmin, vmax = setup_values_and_arrows(learner, plt)
 
     plt.matshow(value, fignum=0, vmax=vmax, vmin=vmin, cmap=value_colormap)
-    # plt.colorbar()
+
     plt.draw()
     plt.show()
 
@@ -60,10 +62,7 @@ def set_goal_value(learner, value, vmax):
 
 
 def save_figure(learner, plt, episode_id):
-    value_dir = os.path.join("../data/value_evolution",
-                             learner.env.__class__.__name__,
-                             learner.__class__.__name__
-                             )
+    value_dir = get_records_folder(learner)
     if not os.path.exists(value_dir):
         os.makedirs(value_dir)
     plt.savefig(os.path.join(value_dir, f"value_map_t_{episode_id}.png"))
@@ -91,11 +90,18 @@ def plot_simulation(learner, episode_id, record=False):
 
 
 def save_simulation(learner, plt, episode_id, time_step):
-    sim_dir = os.path.join("../data/value_evolution",
-                           learner.env.__class__.__name__,
-                           learner.__class__.__name__,
+    sim_dir = os.path.join(get_records_folder(learner),
                            f"simulation_e_{episode_id}"
                            )
     if not os.path.exists(sim_dir):
         os.makedirs(sim_dir)
     plt.savefig(os.path.join(sim_dir, f"run_t_{time_step}.png"))
+
+
+def get_records_folder(learner):
+    return os.path.join(get_project_dir(),
+                        "data",
+                        "value_evolution",
+                        learner.env.__class__.__name__,
+                        learner.env.obstacles.__class__.__name__,
+                        learner.__class__.__name__)

@@ -11,7 +11,7 @@ import tqdm
 
 
 class GreedyQLearner:
-    def __init__(self, env, record=False):
+    def __init__(self, env, epsilon=1., gamma=0.98, alpha=0.9, epsilon_decay_window=200, record=False):
         self.record = record
         self.env = env
         self.reset()
@@ -20,10 +20,10 @@ class GreedyQLearner:
 
         self.ax = None
         #Hyperparameters
-        self.epsilon_0 = 1.
-        self.epsilon_decay_window = 200
-        self.gamma = 0.98
-        self.alpha = 0.9
+        self.epsilon_0 = epsilon
+        self.epsilon_decay_window = epsilon_decay_window
+        self.gamma = gamma
+        self.alpha = alpha
 
         self.reset()
 
