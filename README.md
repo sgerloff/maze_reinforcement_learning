@@ -9,16 +9,20 @@ The agent then starts to learn to navigate the specific maze using q-learning ei
 ### Exploring the maze
 The agent is tasked to navigate a randomly-generated maze and arrive at the bottom right corner (red). To do this the agent needs to bypass obstacles (black) and tries to minimize the punishment for arriving late. 
 
+
 <p align="center">
+  <h4>Episode = 50:</h4>
   <image src="data/run_episode_50.gif" width="500" height="500"/>
-<\p>
+</p>
 
 ### Learning the value function
 In a traditional q-learning fashion, the policy is learned by approximating a value function and derive appropriate quality of actions (indicated by the size of the arrows), from which random actions are chosen at each step in time. The evolution of the value function is shown during training:
 
+
 <p align="center">
-<image src="data/value_evolution_prim_maze.gif" width="500" height="500"/>
-<\p>
+  <h4>Evolution for 350 episodes:</h4>
+  <image src="data/value_evolution_prim_maze.gif" width="500" height="500"/>
+</p>
   
 The colormap indicates the magnitude of the value function at the different states, where yellow is high value and purple is low value.
 
@@ -26,8 +30,9 @@ The colormap indicates the magnitude of the value function at the different stat
 This setup allows to learn virtually any maze geometry, which can be explored by using a simple GUI where the obstacles can be provided manually at the beginning of the training. Here, is an example
 
 <p align="center">
-<image src="data/run_episode_1500_custom_maze.gif" width="350" height="350"/>
-<\p>
+  <h4>Episode = 1500:</h4>
+  <image src="data/run_episode_1500_custom_maze.gif" width="350" height="350"/>
+</p>
 
 ## Setup
 
