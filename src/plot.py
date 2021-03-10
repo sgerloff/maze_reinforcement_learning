@@ -1,9 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import copy, os
+
+# Set custom color map, indicating obstacles and goal with "under" and "over" color, respectively.
+value_colormap = copy.copy(plt.cm.get_cmap("viridis"))
+value_colormap.set_under("#162838")  # Fancy dark grey
+value_colormap.set_over("#EB4D4D")  # Nice Red
 
 
 def setup_plot(shape, scale=0.75):
-    figure = plt.figure(figsize=(scale*shape[1], scale*shape[0]))
+    figure = plt.figure(figsize=(scale * shape[1], scale * shape[0]))
     ax = figure.add_subplot()
     ax.set_autoscaley_on(True)
     ax.set_autoscalex_on(True)
@@ -12,32 +18,61 @@ def setup_plot(shape, scale=0.75):
     return ax
 
 
-def plot_values_and_policy(learner):
-    value = np.sum(learner.quality * learner.policy, axis=-1)
-    vmin = np.min(value) - 1 # Leave space 1 for obstacles
-    vmax = np.max(value)
+def plot_values_and_policy(learner, episode_id, record=False):
     plt.cla()
-    # # ax.axis('off')
+    plt.axis("off")
+    value, vmin, vmax = setup_values_and_arrows(learner, plt)
 
-    scale = 0.5
+    plt.matshow(value, fignum=0, vmax=vmax, vmin=vmin, cmap=value_colormap)
+    # plt.colorbar()
+    plt.draw()
+    plt.show()
+
+    if record:
+        save_figure(learner, plt, episode_id)
+    else:
+        plt.pause(0.1)
+
+
+def setup_values_and_arrows(learner, plt, scale=0.5):
+    value = np.sum(learner.quality * learner.policy, axis=-1)
+    vmin = np.min(value)
+    vmax = np.max(value)
+
     for state in learner.env.get_all_states():
         i, j = state
         if not learner.env.is_the_new_state_allowed(state):
-            value[i, j] = vmin  # Set obstacles
+            value[i, j] = vmin - 1  # Set obstacles
         else:
             # Generate arrows for policy
             for action in range(learner.env.action_space.n):
                 vx, vy = scale * learner.env.action_dict[action] * learner.policy[i, j][action]
                 plt.arrow(j, i, vy, vx, head_width=0.1, color='black', alpha=0.5)
 
-    plt.matshow(value, fignum=0, vmax=vmax, vmin=vmin)
-    plt.draw()
-    plt.show()
-    plt.pause(0.1)
-    
-def plot_simulation(learner):
+    value = set_goal_value(learner, value, vmax)
+    return value, vmin, vmax
+
+
+def set_goal_value(learner, value, vmax):
+    i, j = learner.env.goal_state
+    value[i, j] = vmax + 1
+    return value
+
+
+def save_figure(learner, plt, episode_id):
+    value_dir = os.path.join("../data/value_evolution",
+                             learner.env.__class__.__name__,
+                             learner.__class__.__name__
+                             )
+    if not os.path.exists(value_dir):
+        os.makedirs(value_dir)
+    plt.savefig(os.path.join(value_dir, f"value_map_t_{episode_id}.png"))
+
+
+def plot_simulation(learner, episode_id, record=False):
     learner.env.reset(learner.env.start_state)
     terminated = False
+    time_step = 0
     while not terminated:
         action_id = learner.choose_action(learner.env.state)
         old_state = learner.env.state
@@ -47,4 +82,20 @@ def plot_simulation(learner):
         else:
             plt.scatter(old_state[1], old_state[0], c='gray', s=120)
             plt.scatter(new_state[1], new_state[0], c='orange', s=120)
-        plt.pause(0.05)
+
+        if record:
+            save_simulation(learner, plt, episode_id, time_step)
+            time_step += 1
+        else:
+            plt.pause(0.05)
+
+
+def save_simulation(learner, plt, episode_id, time_step):
+    sim_dir = os.path.join("../data/value_evolution",
+                           learner.env.__class__.__name__,
+                           learner.__class__.__name__,
+                           f"simulation_e_{episode_id}"
+                           )
+    if not os.path.exists(sim_dir):
+        os.makedirs(sim_dir)
+    plt.savefig(os.path.join(sim_dir, f"run_t_{time_step}.png"))

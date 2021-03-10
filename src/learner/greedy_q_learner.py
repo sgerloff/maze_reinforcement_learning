@@ -11,7 +11,8 @@ import tqdm
 
 
 class GreedyQLearner:
-    def __init__(self, env):
+    def __init__(self, env, record=False):
+        self.record = record
         self.env = env
         self.reset()
         self.policy = None
@@ -45,12 +46,9 @@ class GreedyQLearner:
 
     def episode(self, learning_episode_id=0):
         terminated, epsilon = self.initialize_episode(learning_episode_id)
-        states, action_ids = [], []
         while not terminated:
-            states.append(copy.deepcopy(self.env.state))
-            terminated, action_id = self.run_episode(epsilon)
-            action_ids.append(action_id)
-        return states, action_ids
+            terminated, _ = self.episode_step(epsilon)
+        return None
 
     def initialize_episode(self, learning_episode_id):
         terminated = False
@@ -62,7 +60,7 @@ class GreedyQLearner:
 
         return terminated, epsilon
 
-    def run_episode(self, epsilon):
+    def episode_step(self, epsilon):
         state = copy.deepcopy(self.env.state)
 
         self.policy = self.get_policy(epsilon)
@@ -116,10 +114,9 @@ class GreedyQLearner:
         self.ax.axis('off')
 
     def plot_episode(self, learning_episode_id, simulation_interval=50):
-        plot_values_and_policy(self)
-        if (learning_episode_id % simulation_interval == simulation_interval - 1):
-            if learning_episode_id > 2.*simulation_interval - 1: # Skip the first two intervals
-                plot_simulation(self)
+        plot_values_and_policy(self, learning_episode_id, record=self.record)
+        if (learning_episode_id % simulation_interval == 0) and learning_episode_id > 0:
+            plot_simulation(self, learning_episode_id, record=self.record)
 
 
 

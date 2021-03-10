@@ -101,7 +101,8 @@ class Maze(gym.Env):
 
     def __get_random_state(self):
         return np.random.randint(low=np.array([0, 0]),
-                                 high=np.array([self.shape[0] - 1, self.shape[1] - 1]),
+                                 # high=np.array([self.shape[0] - 1, self.shape[1] - 1]),
+                                 high=np.array([self.shape[0], self.shape[1]]),
                                  size=(2,))
 
     def is_the_new_state_allowed(self, new_state):
