@@ -11,7 +11,6 @@ The agent is tasked to navigate a randomly-generated maze and arrive at the bott
 
 
 <p align="center">
-  <h4>Episode = 50:</h4>
   <image src="data/run_episode_50.gif" width="500" height="500"/>
 </p>
 
@@ -20,7 +19,6 @@ In a traditional q-learning fashion, the policy is learned by approximating a va
 
 
 <p align="center">
-  <h4>Evolution for 350 episodes:</h4>
   <image src="data/value_evolution_prim_maze.gif" width="500" height="500"/>
 </p>
   
@@ -30,7 +28,6 @@ The colormap indicates the magnitude of the value function at the different stat
 This setup allows to learn virtually any maze geometry, which can be explored by using a simple GUI where the obstacles can be provided manually at the beginning of the training. Here, is an example
 
 <p align="center">
-  <h4>Episode = 1500:</h4>
   <image src="data/run_episode_1500_custom_maze.gif" width="350" height="350"/>
 </p>
 
