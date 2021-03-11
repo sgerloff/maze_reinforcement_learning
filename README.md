@@ -9,10 +9,9 @@ The agent then starts to learn to navigate the specific maze using q-learning ei
 ### Exploring the maze
 The agent is tasked to navigate a randomly-generated maze and arrive at the bottom right corner (red). To do this the agent needs to bypass obstacles (black) and tries to minimize the punishment for arriving late. 
 
-
-<p align="center">
-  <image src="data/run_episode_50.gif" width="500" height="500"/>
-</p>
+| Episodes = 50 | Episodes = 350 |
+| --- | --- |
+|<image src="data/run_episode_50.gif" width="500" height="500"/>| <image src="data/run_episode_350.gif" width="500" height="500"/>|
 
 ### Learning the value function
 In a traditional q-learning fashion, the policy is learned by approximating a value function and derive appropriate quality of actions (indicated by the size of the arrows), from which random actions are chosen at each step in time. The evolution of the value function is shown during training:
