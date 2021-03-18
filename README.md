@@ -11,7 +11,7 @@ The agent is tasked to navigate a randomly-generated maze and arrive at the bott
 
 | Episodes = 50 | Episodes = 350 |
 | --- | --- |
-|<image src="data/run_episode_50.gif" width="500" height="500"/>| <image src="data/run_episode_350.gif" width="500" height="500"/>|
+|<image src="data/run_episode_50.gif"/>| <image src="data/run_episode_350.gif"/>|
 
 ### Learning the value function
 In a traditional q-learning fashion, the policy is learned by approximating a value function and derive appropriate quality of actions (indicated by the size of the arrows), from which random actions are chosen at each step in time. The evolution of the value function is shown during training:
